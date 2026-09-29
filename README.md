@@ -113,16 +113,17 @@ python -m unittest discover -s tests
 
 ### 4. Launch the Web Application
 
-**Option A (Streamlit Python Dashboard — Port 8501):**
-* Double-click **Start TechNova Website** on your Desktop or run [`start_website.bat`](file:///c:/Users/secre/Downloads/hackothan/start_website.bat).
-* Command line: `streamlit run app.py` (opens `http://localhost:8501`).
-
-**Option B (Modern React & FastAPI Web App — Port 5173):**
-* Run [`start_react_website.bat`](file:///c:/Users/secre/Downloads/hackothan/start_react_website.bat).
+**Option A (Recommended Flagship — Modern React 19 & FastAPI Command Center — Port 5173):**
+* Double-click [`start_react_website.bat`](file:///c:/Users/secre/Downloads/hackothan/start_react_website.bat).
 * This launches the **FastAPI REST backend** (`api.py` on port 8000) and the **Vite React Web App** (`frontend` on port 5173).
-* Features: Real-time API communication, dark glassmorphism, responsive navigation tabs, and live Copilot chat.
+* Features: Live Aurora canvas background, Haptic Web Audio synthesizer, Animated 4-Node Live ReAct Pipeline (`[User] -> [Tool] -> [SQLite] -> [Agent]`), Archify architecture interactive modal, real-time receipt parsing, and grounded citation chat.
 
-**Option C (Optional FastMCP Server):**
+**Option B (Classic Python Streamlit Dashboard — Port 8501):**
+* Double-click [`start_website.bat`](file:///c:/Users/secre/Downloads/hackothan/start_website.bat) or run `run.bat`.
+* Command line: `streamlit run app.py` (opens `http://localhost:8501`).
+* Full-featured standard Streamlit deployment for classical Python evaluation.
+
+**Option C (Optional FastMCP Server — Bonus Deliverable):**
 ```bash
 python mcp_server.py
 ```
