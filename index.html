@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechNova Retail — AI Command Center</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    * {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      box-sizing: border-box;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    :root {
+      --bg-space: #030712;
+      --card-bg: rgba(10, 16, 30, 0.72);
+      --card-border: rgba(56, 189, 248, 0.16);
+      --cyan-bright: #00E5FF;
+      --amber-alert: #F59E0B;
+    }
+
+    body {
+      background-color: var(--bg-space);
+      color: #E2E8F0;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Double-Bezel Specular Card Highlight matching image */
+    .bezel-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bezel-card:hover {
+      border-color: rgba(0, 229, 255, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.12);
+    }
+
+    /* Amber Alert Card matching image */
+    .alert-card {
+      border: 1.5px solid var(--amber-alert);
+      border-radius: 14px;
+      background: rgba(245, 158, 11, 0.04);
+      backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 20px rgba(245, 158, 11, 0.12);
+    }
+
+    /* Glowing Cyan Pill matching image: + Ingest Receipt */
+    .btn-ingest-cyan {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.22), rgba(14, 165, 233, 0.12));
+      border: 1.5px solid #00E5FF;
+      border-radius: 9999px;
+      color: #FFFFFF;
+      box-shadow: 0 0 24px rgba(0, 229, 255, 0.4), inset 0 0 12px rgba(0, 229, 255, 0.15);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-ingest-cyan:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.32), rgba(14, 165, 233, 0.2));
+      box-shadow: 0 0 32px rgba(0, 229, 255, 0.65), inset 0 0 14px rgba(0, 229, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    .btn-ingest-cyan:active {
+      transform: scale(0.98);
+    }
+
+    /* Dark Secondary Pill matching image: Track Order */
+    .btn-track-dark {
+      background: rgba(14, 22, 38, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      color: #CBD5E1;
+      transition: all 0.2s ease;
+    }
+    .btn-track-dark:hover {
+      border-color: rgba(0, 229, 255, 0.35);
+      color: #FFFFFF;
+      background: rgba(18, 28, 48, 0.95);
+      transform: translateY(-1px);
+    }
+    .btn-track-dark:active {
+      transform: scale(0.98);
+    }
+
+    /* Start Return Button */
+    .btn-start-return {
+      background: #101726;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .btn-start-return:hover {
+      background: #182338;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+    .btn-start-return:active {
+      transform: scale(0.96);
+    }
+
+    /* Tool Badge */
+    .tool-badge {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #E2E8F0;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Action Chip */
+    .chip-btn {
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: rgba(12, 19, 34, 0.7);
+      color: #94A3B8;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 11px;
+      transition: all 0.2s ease;
+    }
+    .chip-btn:hover {
+      border-color: #00E5FF;
+      color: #00E5FF;
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .chip-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Audio Click Indicator Pulse */
+    @keyframes audioPulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .audio-active {
+      animation: audioPulse 0.4s ease;
+    }
+
+    /* Magic UI Animated Beam Flow */
+    @keyframes beamFlow {
+      0% { stroke-dashoffset: 160; }
+      100% { stroke-dashoffset: -160; }
+    }
+    .beam-flow {
+      stroke-dasharray: 45 120;
+      animation: beamFlow 2.2s linear infinite;
+      filter: drop-shadow(0 0 6px #00E5FF);
+    }
+    .beam-pulse-active {
+      animation: beamFlow 0.65s linear infinite !important;
+      filter: drop-shadow(0 0 14px #00E5FF) !important;
+    }
+
+    /* Archify Trace Motion Lines */
+    @keyframes archifyDash {
+      to {
+        stroke-dashoffset: -36;
+      }
+    }
+    .archify-flow-line {
+      stroke-dasharray: 6 6;
+      animation: archifyDash 1.2s linear infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased relative select-none" onclick="ensureAudioUnlocked()">
+
+  <!-- INTERACTIVE COSMIC AURORA RIBBONS CANVAS BACKGROUND -->
+  <canvas id="auroraCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- 1. TOP HEADER (Exact 1:1 matching image) -->
+  <header class="h-16 px-7 border-b border-slate-800/60 bg-[#030712]/85 backdrop-blur-xl flex items-center justify-between z-20 shrink-0">
+    <!-- Brand Logo -->
+    <div class="flex items-center gap-3.5">
+      <!-- Luminous Squircle Logo with Stylized Neon 'N' -->
+      <div class="w-10 h-10 rounded-xl bg-[#071E36] border border-cyan-400/50 flex items-center justify-center shadow-[0_0_18px_rgba(0,229,255,0.45)]">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 19V5C4 5 7.5 5 9.5 8.5L14.5 15.5C16.5 19 20 19 20 19V5" stroke="#00E5FF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 7px #00E5FF);" />
+          <circle cx="4" cy="19" r="1.6" fill="#00E5FF" />
+          <circle cx="20" cy="5" r="1.6" fill="#00E5FF" />
+        </svg>
+      </div>
+      <div>
+        <div class="text-base font-extrabold text-white tracking-tight leading-none">TechNova Retail</div>
+        <div class="text-xs text-slate-400 font-medium leading-none mt-1">AI Command Center</div>
+      </div>
+    </div>
+
+    <!-- Centered Search Bar -->
+    <div class="w-[440px] relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-sm text-slate-500"></i>
+      <input type="text" placeholder="Search" class="w-full bg-[#090F1D]/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors">
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <!-- Archify Architecture Button -->
+      <button onclick="playClickSound(); openArchifyModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/40 text-xs text-cyan-300 font-semibold transition-all shadow-[0_0_12px_rgba(0,229,255,0.2)]">
+        <i class="fa-solid fa-diagram-project text-cyan-400 text-xs"></i>
+        <span>Architecture (Archify)</span>
+      </button>
+
+      <!-- Sound Status Pill -->
+      <button id="soundButton" onclick="toggleSoundManual(event)" title="Click to test/toggle audio" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 text-xs text-cyan-400 font-semibold transition-all">
+        <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+        <span id="soundText">Audio Active</span>
+      </button>
+
+      <!-- AI Status Badge -->
+      <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>AI Engine Online</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. MAIN LAYOUT (Icon Rail + 2-Column Split matching image) -->
+  <div class="flex-1 flex overflow-hidden z-10">
+
+    <!-- SLIM LEFT ICON RAIL (Exact match to image) -->
+    <nav class="w-[70px] border-r border-slate-800/60 bg-[#030712]/75 backdrop-blur-xl flex flex-col justify-between items-center py-5 shrink-0">
+      <!-- Top Nav Icons -->
+      <div class="flex flex-col items-center gap-4">
+        <!-- Home (Active in cyan box) -->
+        <button onclick="playClickSound()" class="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-400 text-cyan-300 flex items-center justify-center text-base shadow-[0_0_14px_rgba(0,229,255,0.35)] transition-transform active:scale-95">
+          <i class="fa-solid fa-house"></i>
+        </button>
+        <!-- Grid -->
+        <button onclick="playHoverSound()" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center justify-center text-base transition-colors">
+          <i class="fa-solid fa-table-cells-large"></i>
+        </button>
+        <!-- Clipboard -->
+        <button onclick="playHoverSound()" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center justify-center text-base transition-colors">
+          <i class="fa-regular fa-clipboard"></i>
+        </button>
+        <!-- Settings -->
+        <button onclick="playHoverSound()" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center justify-center text-base transition-colors">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+
+      <!-- Bottom Nav Icons -->
+      <div class="flex flex-col items-center gap-4">
+        <!-- Bell -->
+        <button onclick="playHoverSound()" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white flex items-center justify-center text-base transition-colors">
+          <i class="fa-regular fa-bell"></i>
+        </button>
+        <!-- Logout -->
+        <button onclick="playHoverSound()" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white flex items-center justify-center text-base transition-colors">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="flex-1 grid grid-cols-12 gap-6 p-6 overflow-y-auto">
+
+      <!-- LEFT/CENTER DASHBOARD (col-span-8) -->
+      <div class="col-span-8 space-y-5">
+
+        <!-- 1. Top Alert Box: Action Required -->
+        <div class="alert-card p-4 sm:p-5">
+          <div class="flex items-center justify-between">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2.5">
+                <span class="text-amber-400 text-base">⚠️</span>
+                <span class="text-base font-bold text-amber-300">Action Required: 2 Deadlines Expiring Soon (&lt; 7 Days)</span>
+              </div>
+              <div class="text-sm text-slate-300 pl-7">
+                Sony WH-1000XM5: Return window ends in 3 days
+              </div>
+            </div>
+            <!-- Start Return Button -->
+            <button onclick="playClickSound(); triggerReturn('Sony WH-1000XM5')" class="btn-start-return px-5 py-2 text-sm font-bold shadow-md">
+              Start Return
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Primary Action Buttons Row -->
+        <div class="flex items-center gap-3.5">
+          <!-- + Ingest Receipt (with nested icon capsule) -->
+          <button onclick="playScanSound(); openIngestModal()" class="py-2.5 px-6 btn-ingest-cyan text-sm font-bold flex items-center gap-3">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Ingest Receipt</span>
+            <div class="ml-2 pl-2.5 border-l border-cyan-300/40 flex items-center gap-1.5 text-cyan-200">
+              <span class="text-xs">+</span>
+              <i class="fa-regular fa-file-lines text-sm"></i>
+            </div>
+          </button>
+
+          <!-- Track Order Ghost Button -->
+          <button onclick="playClickSound(); triggerTrack()" class="py-2.5 px-7 btn-track-dark text-sm font-semibold">
+            Track Order
+          </button>
+        </div>
+
+        <!-- 3. Three Metrics Row -->
+        <div class="grid grid-cols-3 gap-4">
+          <!-- Metric 1: ₹28,500 -->
+          <div class="bezel-card p-5 space-y-1.5 cursor-pointer" onclick="playClickSound()">
+            <div class="flex items-center justify-between">
+              <div class="text-3xl font-black text-white tracking-tight mono">₹28,500</div>
+              <!-- Cyan Sparkline Wave -->
+              <svg width="84" height="28" viewBox="0 0 84 28" fill="none">
+                <path d="M2 20L16 12L30 17L48 5L66 12L80 7" stroke="#00E5FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="80" cy="7" r="3.5" fill="#00E5FF" />
+              </svg>
+            </div>
+            <div class="text-[11px] text-slate-400 font-bold tracking-wider uppercase mono">SAVED &amp; PROTECTED</div>
+          </div>
+
+          <!-- Metric 2: 3 Active Warranties -->
+          <div class="bezel-card p-5 space-y-1.5 cursor-pointer" onclick="playClickSound()">
+            <div class="text-3xl font-black text-white tracking-tight mono">3</div>
+            <div class="text-sm text-slate-400 font-medium">Active Warranties</div>
+          </div>
+
+          <!-- Metric 3: 1 In-Transit Order -->
+          <div class="bezel-card p-5 space-y-1.5 cursor-pointer" onclick="playClickSound()">
+            <div class="text-3xl font-black text-white tracking-tight mono">1</div>
+            <div class="text-sm text-slate-400 font-medium">In-Transit Order</div>
+          </div>
+        </div>
+
+        <!-- 4. Recent Orders List -->
+        <div class="space-y-3 pt-1">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white tracking-tight">Recent Orders</h3>
+            <span class="text-sm text-slate-400 hover:text-cyan-400 cursor-pointer flex items-center gap-1 font-medium transition-colors" onclick="playClickSound()">
+              Show all <i class="fa-solid fa-chevron-down text-xs"></i>
+            </span>
+                  <div class="space-y-2.5">
+            <!-- Order 1: Sony WH-1000XM5 -->
+            <div class="bezel-card p-4 flex items-center justify-between cursor-pointer" onclick="playClickSound(); triggerReturn('Sony WH-1000XM5')">
+              <div class="flex items-center gap-3.5 flex-1 max-w-md">
+                <div class="w-11 h-11 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 text-base flex-shrink-0">
+                  <i class="fa-solid fa-headphones"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-bold text-white">Sony WH-1000XM5</span>
+                    <span class="text-xs text-amber-400 font-bold mono">3 days left</span>
+                  </div>
+                  <!-- Amber progress bar -->
+                  <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div class="bg-amber-400 h-full rounded-full shadow-[0_0_8px_rgba(245,158,11,0.6)]" style="width: 78%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-base font-bold text-white mono pl-4">₹24,990</div>
+            </div>
+
+            <!-- Order 2: Apple iPad Air M2 -->
+            <div class="bezel-card p-4 flex items-center justify-between cursor-pointer" onclick="playClickSound(); askCopilot('Check AppleCare warranty on iPad Air')">
+              <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 text-base flex-shrink-0">
+                  <i class="fa-solid fa-tablet-screen-button"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-white">Apple iPad Air M2</div>
+                  <div class="text-xs text-slate-400 mono mt-0.5">₹59,900</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3.5">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  Warranty Active
+                </span>
+                <span class="text-base font-bold text-white mono">₹59,900</span>
+              </div>
+            </div>
+
+            <!-- Order 3: Keychron K2 keyboard -->
+            <div class="bezel-card p-4 flex items-center justify-between cursor-pointer" onclick="playClickSound(); askCopilot('Track shipment for Keychron K2 keyboard')">
+              <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 text-base flex-shrink-0">
+                  <i class="fa-solid fa-keyboard"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-white">Keychron K2 keyboard</div>
+                  <div class="text-xs text-slate-400 mono mt-0.5">K2 -0322</div>
+                </div>
+              </div>
+              <div class="text-base font-bold text-white mono">₹24,990</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COPILOT PANEL (col-span-4, exact match to image) -->
+      <div class="col-span-4">
+        <div class="bezel-card p-5 h-full flex flex-col justify-between border border-cyan-500/20 shadow-2xl">
+          
+          <div>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h2 class="text-sm font-bold text-white">TechNova AI Copilot</h2>
+              <button onclick="playClickSound()" class="text-slate-500 hover:text-white text-sm">✕</button>
+            </div>
+
+            <!-- MAGIC UI ANIMATED BEAM: Live ReAct Data Pipeline -->
+            <div class="my-3 p-3 rounded-xl bg-[#060B16]/90 border border-cyan-500/25 shadow-inner">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-1.5 text-[10px] mono font-bold text-cyan-400">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  <span>LIVE REACT PIPELINE (MAGIC UI)</span>
+                </div>
+                <span id="beamPipelineStatus" class="text-[10px] mono text-slate-400">Idle · Ready</span>
+              </div>
+
+              <!-- Animated Beam Nodes & SVG Track -->
+              <div class="relative flex items-center justify-between px-2 py-1">
+                <!-- SVG Beam Paths -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" style="overflow: visible;">
+                  <defs>
+                    <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.1"/>
+                      <stop offset="50%" stop-color="#00E5FF" stop-opacity="1"/>
+                      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.1"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Base Track -->
+                  <path d="M 20 18 L 100 18 L 180 18 L 260 18" stroke="rgba(56, 189, 248, 0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- Animated Pulse Beam -->
+                  <path id="magicBeamPath" class="beam-flow" d="M 20 18 L 100 18 L 180 18 L 260 18" stroke="url(#beamGradient)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </svg>
+
+                <!-- Node 1: User / Client -->
+                <div id="nodeClient" class="relative z-10 flex flex-col items-center">
+                  <div class="w-8 h-8 rounded-full bg-[#0A1324] border border-cyan-400/40 flex items-center justify-center text-xs text-cyan-300 shadow-md transition-all">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <span class="text-[9px] mono text-slate-400 mt-1 font-semibold">User</span>
+                </div>
+
+                <!-- Node 2: ReAct Tool -->
+                <div id="nodeTool" class="relative z-10 flex flex-col items-center">
+                  <div class="w-8 h-8 rounded-full bg-[#0A1324] border border-amber-400/40 flex items-center justify-center text-xs text-amber-400 shadow-md transition-all">
+                    <i class="fa-solid fa-bolt"></i>
+                  </div>
+                  <span class="text-[9px] mono text-slate-400 mt-1 font-semibold">Tool</span>
+                </div>
+
+                <!-- Node 3: SQLite DB -->
+                <div id="nodeDb" class="relative z-10 flex flex-col items-center">
+                  <div class="w-8 h-8 rounded-full bg-[#0A1324] border border-indigo-400/40 flex items-center justify-center text-xs text-indigo-300 shadow-md transition-all">
+                    <i class="fa-solid fa-database"></i>
+                  </div>
+                  <span class="text-[9px] mono text-slate-400 mt-1 font-semibold">SQLite</span>
+                </div>
+
+                <!-- Node 4: Copilot Model -->
+                <div id="nodeCopilot" class="relative z-10 flex flex-col items-center">
+                  <div class="w-8 h-8 rounded-full bg-[#0A1324] border border-emerald-400/40 flex items-center justify-center text-xs text-emerald-400 shadow-md transition-all">
+                    <i class="fa-solid fa-robot"></i>
+                  </div>
+                  <span class="text-[9px] mono text-slate-400 mt-1 font-semibold">Agent</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message Feed -->
+            <div id="copilotFeed" class="py-3.5 space-y-3.5 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Default Assistant Message -->
+              <div class="space-y-2">
+                <div class="flex items-center gap-2.5 text-xs">
+                  <div class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-comment-dots"></i>
+                  </div>
+                  <span class="text-xs text-slate-300 font-medium">The messages TechNova AI copas am</span>
+                </div>
+
+                <div class="pl-5 space-y-2.5">
+                  <!-- Tool Call Badge -->
+                  <div>
+                    <span class="tool-badge">
+                      <i class="fa-solid fa-bolt text-amber-400 text-xs"></i>
+                      Tool: store_policy_retriever
+                    </span>
+                  </div>
+
+                  <!-- Text response -->
+                  <div class="text-xs sm:text-sm text-slate-300 leading-relaxed bg-[#080E1C]/90 p-3.5 rounded-xl border border-slate-800/80">
+                    I found the specific details in the Return Policy. The item is still eligible for return according to §2.1.
+                    <br><span class="text-cyan-400 font-semibold">Citations: [Store Policy §2.1]</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Area -->
+          <div class="space-y-3 pt-3.5 border-t border-slate-800">
+            <!-- Quick Chips -->
+            <div class="flex items-center gap-2.5">
+              <button onclick="playClickSound(); askCopilot('Initiate return process for Sony WH-1000XM5')" class="chip-btn">[Initiate Return]</button>
+              <button onclick="playClickSound(); askCopilot('Download purchase invoice receipt')" class="chip-btn">[Download Receipt]</button>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="relative flex items-center">
+              <input id="copilotInput" type="text" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') sendCopilotMsg()" class="w-full bg-[#080E1C] border border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors">
+              <button onclick="sendCopilotMsg()" class="absolute right-3 text-slate-400 hover:text-cyan-400 transition-colors">
+                <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RECEIPT INGESTION MODAL -->
+  <div id="ingestModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+    <div class="bezel-card max-w-md w-full p-6 space-y-4 border border-cyan-400/40">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-receipt text-cyan-400"></i>
+          <h3 class="text-sm font-bold text-white">Proactive Receipt Ingestion</h3>
+        </div>
+        <button onclick="closeIngestModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <p class="text-xs text-slate-300">Upload receipt (.pdf, .png, image). Deterministic date math will compute return deadlines automatically.</p>
+      
+      <div class="border-2 border-dashed border-slate-700 hover:border-cyan-400 rounded-xl p-8 text-center cursor-pointer transition-colors" onclick="processReceiptScan()">
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-cyan-400 mb-2"></i>
+        <div class="text-xs font-semibold text-white">Click to Upload or Drag File</div>
+        <div class="text-[10px] text-slate-500 mono mt-1">PDF, PNG, JPG up to 10MB</div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeIngestModal()" class="px-4 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button onclick="processReceiptScan()" class="px-4 py-1.5 rounded-lg text-xs font-bold btn-ingest-cyan text-white">Process Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHIFY INTERACTIVE ARCHITECTURE & DATA FLOW MODAL -->
+  <div id="archifyModal" class="fixed inset-0 bg-black/85 backdrop-blur-xl hidden items-center justify-center z-50 p-6 overflow-y-auto">
+    <div class="bezel-card max-w-4xl w-full p-6 space-y-5 border border-cyan-400/40 shadow-[0_0_50px_rgba(0,229,255,0.25)]">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-400 shadow-[0_0_14px_rgba(0,229,255,0.4)]">
+            <i class="fa-solid fa-diagram-project text-base"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-extrabold text-white">System Architecture & Data Flow (Archify Engine)</h2>
+            <p class="text-xs text-slate-400 mono">CAPABL Hackathon Track 5 · Verifiable Architecture & Active Flow Streams</p>
+          </div>
+        </div>
+        <button onclick="closeArchifyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm transition-colors">✕</button>
+      </div>
+
+      <!-- Interactive Flow Visualizer (Archify Canvas / SVG Diagram) -->
+      <div class="p-5 rounded-2xl bg-[#030610] border border-cyan-500/20 space-y-4">
+        
+        <!-- Tier 1: Client & Ingestion -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-[#091020] border border-cyan-400/30 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono text-cyan-400 font-bold uppercase">1. Ingestion Layer</span>
+              <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-xs"></i>
+            </div>
+            <div class="text-xs font-bold text-white">Multi-Format Parser</div>
+            <div class="text-[11px] text-slate-400">PDF Receipts · OCR Image · WhatsApp Confirmations</div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#091020] border border-amber-400/30 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono text-amber-400 font-bold uppercase">2. Math Engine</span>
+              <i class="fa-solid fa-calculator text-amber-400 text-xs"></i>
+            </div>
+            <div class="text-xs font-bold text-white">Deterministic Python Dates</div>
+            <div class="text-[11px] text-slate-400">Pure Date Arithmetic · 30-Day Windows · &lt; 7-Day Warning</div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#091020] border border-emerald-400/30 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono text-emerald-400 font-bold uppercase">3. Grounded RAG</span>
+              <i class="fa-solid fa-book-bookmark text-emerald-400 text-xs"></i>
+            </div>
+            <div class="text-xs font-bold text-white">Store Policy §2.1</div>
+            <div class="text-[11px] text-slate-400">Chroma / FAISS Vector Store · Strict Guardrails</div>
+          </div>
+        </div>
+
+        <!-- Animated Data Flow Connectors (Archify Trace Motion) -->
+        <div class="relative py-1 flex items-center justify-center">
+          <svg width="100%" height="36" viewBox="0 0 600 36" fill="none" class="overflow-visible">
+            <path d="M 100 0 L 100 18 L 300 18 L 300 36" stroke="#00E5FF" stroke-width="2" class="archify-flow-line"/>
+            <path d="M 300 0 L 300 36" stroke="#F59E0B" stroke-width="2" class="archify-flow-line"/>
+            <path d="M 500 0 L 500 18 L 300 18 L 300 36" stroke="#10B981" stroke-width="2" class="archify-flow-line"/>
+          </svg>
+        </div>
+
+        <!-- Tier 2: Agent Core & Database -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-[#0B1528] border border-indigo-400/30 space-y-2 shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono text-indigo-400 font-bold uppercase">4. Autonomous Agent Core</span>
+              <span class="px-2 py-0.5 rounded text-[10px] mono bg-indigo-500/20 text-indigo-300 font-semibold">ReAct Cycle</span>
+            </div>
+            <div class="text-sm font-bold text-white">LangChain ReAct Reasoning Loop</div>
+            <div class="text-xs text-slate-300 leading-relaxed">
+              Dynamically invokes <span class="text-amber-400 mono font-semibold">return_warranty_calculator</span> and <span class="text-cyan-400 mono font-semibold">order_status_lookup</span> tools with verifiable citations.
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#0B1528] border border-cyan-400/30 space-y-2 shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono text-cyan-400 font-bold uppercase">5. Logistics & State</span>
+              <span class="px-2 py-0.5 rounded text-[10px] mono bg-cyan-500/20 text-cyan-300 font-semibold">Mock SQLite</span>
+            </div>
+            <div class="text-sm font-bold text-white">SQLite Order Database (orders.db)</div>
+            <div class="text-xs text-slate-300 leading-relaxed">
+              Maintains orders, courier tracking (Delhivery/Bluedart), items, and status timestamps for instant offline evaluation.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex items-center justify-between pt-2 text-xs text-slate-400">
+        <span class="mono text-[11px] text-cyan-400">✓ Archify Diagram v3.0 Verified · Code Linked</span>
+        <button onclick="closeArchifyModal()" class="px-5 py-2 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-colors shadow-md">Close Explorer</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SOUND & CANVAS ENGINE SCRIPT
+       ============================================================ -->
+  <script>
+    /* ------------------------------------------------------------
+       1. ROBUST AUDIO ENGINE (Guaranteed to play on laptop speakers)
+       ------------------------------------------------------------ */
+    let audioCtx = null;
+    let audioMuted = false;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function ensureAudioUnlocked() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+        }
+      } catch (e) {
+        console.warn("Audio unlock pending interaction");
+      }
+    }
+
+    // 1. Subtle button hover tick (10ms, ultra-quiet)
+    function playHoverSound() {
+      if (audioMuted) return;
+      ensureAudioUnlocked();
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(420, ctx.currentTime);
+        gain.gain.setValueAtTime(0.015, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.02);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.02);
+      } catch (e) {}
+    }
+
+    // 2. Mechanical tactile click (30ms popping switch)
+    function playClickSound() {
+      if (audioMuted) return;
+      ensureAudioUnlocked();
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(240, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.035);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.035);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.035);
+
+        // Flash audio indicator
+        const btn = document.getElementById('soundButton');
+        if (btn) {
+          btn.classList.add('audio-active');
+          setTimeout(() => btn.classList.remove('audio-active'), 350);
+        }
+      } catch (e) {
+        console.error("Audio error:", e);
+      }
+    }
+
+    // 3. Copilot AI response chime (warm two-tone harmonic)
+    function playChimeSound() {
+      if (audioMuted) return;
+      ensureAudioUnlocked();
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        [523.25, 659.25].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.05, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.35);
+        });
+      } catch (e) {}
+    }
+
+    // 4. Receipt scan / tool execution sweep
+    function playScanSound() {
+      if (audioMuted) return;
+      ensureAudioUnlocked();
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.03, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    function toggleSoundManual(e) {
+      if (e) e.stopPropagation();
+      audioMuted = !audioMuted;
+      const text = document.getElementById('soundText');
+      const icon = document.getElementById('soundIcon');
+      if (!audioMuted) {
+        playClickSound();
+        text.innerText = 'Audio Active';
+        icon.className = 'fa-solid fa-volume-high text-cyan-400';
+      } else {
+        text.innerText = 'Muted';
+        icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+      }
+    }
+
+    // Attach hover listener to buttons and cards
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('button, .bezel-card').forEach(el => {
+        el.addEventListener('mouseenter', playHoverSound);
+      });
+    });
+
+    /* ------------------------------------------------------------
+       2. MOUSE-INTERACTIVE AURORA LIGHT BEAMS CANVAS
+       ------------------------------------------------------------ */
+    const canvas = document.getElementById('auroraCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, time = 0;
+
+    let targetMouseX = window.innerWidth * 0.65;
+    let targetMouseY = window.innerHeight * 0.45;
+    let curMouseX = targetMouseX;
+    let curMouseY = targetMouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY;
+    });
+
+    // 85 Cosmic Stardust Particles
+    const stars = [];
+    function initStars() {
+      stars.length = 0;
+      for (let i = 0; i < 85; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.5 + 0.6,
+          baseAlpha: Math.random() * 0.65 + 0.25,
+          speed: Math.random() * 1.8 + 0.6,
+          phase: Math.random() * Math.PI * 2,
+          depth: Math.random() * 0.8 + 0.2,
+          color: Math.random() > 0.4 ? '#00E5FF' : '#38BDF8'
+        });
+      }
+    }
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initStars();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function renderAurora() {
+      ctx.clearRect(0, 0, width, height);
+      time += 0.007;
+
+      curMouseX += (targetMouseX - curMouseX) * 0.045;
+      curMouseY += (targetMouseY - curMouseY) * 0.045;
+      const normX = (curMouseX - width / 2) / (width / 2);
+      const normY = (curMouseY - height / 2) / (height / 2);
+
+      // A. Ambient Cursor Spotlight (Soft Nebula Glow)
+      const spot = ctx.createRadialGradient(curMouseX, curMouseY, 20, curMouseX, curMouseY, 460);
+      spot.addColorStop(0, 'rgba(0, 229, 255, 0.09)');
+      spot.addColorStop(0.5, 'rgba(56, 189, 248, 0.03)');
+      spot.addColorStop(1, 'transparent');
+      ctx.fillStyle = spot;
+      ctx.fillRect(0, 0, width, height);
+
+      // B. 3D Parallax Stardust
+      stars.forEach(s => {
+        const px = (s.x + normX * s.depth * 45 + width) % width;
+        const py = (s.y + normY * s.depth * 30 + height) % height;
+        const alpha = s.baseAlpha * (0.6 + 0.4 * Math.sin(time * s.speed + s.phase));
+
+        ctx.beginPath();
+        ctx.arc(px, py, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = s.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      ctx.globalAlpha = 1.0;
+
+      // C. Sweeping Aurora Silk Ribbons (matching image diagonal flow)
+      const ribbons = [
+        { 
+          y: height * 0.38, 
+          amp: 105, 
+          len: 0.0015, 
+          color1: 'rgba(0, 229, 255, 0.24)', 
+          color2: 'rgba(56, 189, 248, 0.12)', 
+          speed: time * 0.85, 
+          mouseMultiplier: 55 
+        },
+        { 
+          y: height * 0.50, 
+          amp: 125, 
+          len: 0.0012, 
+          color1: 'rgba(56, 189, 248, 0.18)', 
+          color2: 'rgba(99, 102, 241, 0.08)', 
+          speed: time * 0.7 + 1.6, 
+          mouseMultiplier: -40 
+        },
+        { 
+          y: height * 0.64, 
+          amp: 95, 
+          len: 0.0018, 
+          color1: 'rgba(0, 229, 255, 0.16)', 
+          color2: 'rgba(16, 185, 129, 0.06)', 
+          speed: time * 1.1 + 3.0, 
+          mouseMultiplier: 45 
+        }
+      ];
+
+      ribbons.forEach(rib => {
+        ctx.beginPath();
+        ctx.moveTo(0, height);
+
+        for (let x = 0; x <= width; x += 15) {
+          const mouseDisplace = Math.sin((x / width) * Math.PI) * (normY * rib.mouseMultiplier);
+          const y = rib.y + mouseDisplace 
+                  + Math.sin(x * rib.len + rib.speed) * rib.amp 
+                  + Math.cos(x * 0.0007 - rib.speed * 0.5) * 40;
+          ctx.lineTo(x, y);
+        }
+
+        ctx.lineTo(width, height);
+        ctx.closePath();
+
+        const grad = ctx.createLinearGradient(0, rib.y - 130, width, rib.y + 130);
+        grad.addColorStop(0, rib.color1);
+        grad.addColorStop(0.5, rib.color2);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(renderAurora);
+    }
+    renderAurora();
+
+    /* ------------------------------------------------------------
+       3. INTERACTIVE CHAT & MODAL HANDLERS
+       ------------------------------------------------------------ */
+    function askCopilot(query) {
+      const input = document.getElementById('copilotInput');
+      input.value = query;
+      sendCopilotMsg();
+    }
+
+    function triggerReturn(item) {
+      askCopilot(`Initiate return process for ${item}`);
+    }
+
+    function triggerTrack() {
+      askCopilot('Track live shipment for recent orders');
+    }
+
+    function sendCopilotMsg() {
+      const input = document.getElementById('copilotInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      playClickSound();
+      const feed = document.getElementById('copilotFeed');
+
+      // 1. Activate Magic UI Animated Beam
+      const beam = document.getElementById('magicBeamPath');
+      const beamStatus = document.getElementById('beamPipelineStatus');
+      const nodeTool = document.getElementById('nodeTool');
+      const nodeDb = document.getElementById('nodeDb');
+      
+      if (beam) beam.classList.add('beam-pulse-active');
+      if (beamStatus) {
+        beamStatus.innerText = '⚡ Routing: Tool -> SQLite -> Agent';
+        beamStatus.className = 'text-[10px] mono text-cyan-400 font-bold';
+      }
+      if (nodeTool) nodeTool.querySelector('div').className = 'w-8 h-8 rounded-full bg-[#0A1324] border border-amber-400 ring-4 ring-amber-400/30 flex items-center justify-center text-xs text-amber-300 shadow-md transition-all scale-110';
+      if (nodeDb) nodeDb.querySelector('div').className = 'w-8 h-8 rounded-full bg-[#0A1324] border border-indigo-400 ring-4 ring-indigo-400/30 flex items-center justify-center text-xs text-indigo-300 shadow-md transition-all scale-110';
+
+      const userBubble = `
+        <div class="flex justify-end">
+          <div class="p-2 rounded-xl bg-cyan-500/10 text-cyan-200 text-xs border border-cyan-400/30 max-w-[85%]">
+            ${val}
+          </div>
+        </div>
+      `;
+      feed.insertAdjacentHTML('beforeend', userBubble);
+      input.value = '';
+
+      let tool = "store_policy_retriever";
+      let reply = "According to §2.1 Return Policy. The item is still eligible for return according to §2.1. Citations: [Store Policy §2.1]";
+
+      const lower = val.toLowerCase();
+      if (lower.includes("sony") || lower.includes("headphone") || lower.includes("return")) {
+        tool = "store_policy_retriever";
+        reply = "According to §2.1 Return Policy, headphones require original accessories. If the box seal is broken, a ₹500 repackaging fee applies. Return deadline ends in exactly 3 days.";
+      } else if (lower.includes("track") || lower.includes("shipment") || lower.includes("keychron")) {
+        tool = "logistics_tracker";
+        reply = "Keychron K2 keyboard (K2 -0322) is In-Transit via Express Delivery. Current status: Out for Local Hub Sorting. Estimated delivery tomorrow.";
+      } else if (lower.includes("ipad") || lower.includes("applecare") || lower.includes("warranty")) {
+        tool = "warranty_claim_engine";
+        reply = "Apple iPad Air M2 is covered under AppleCare+ until Nov 14, 2026. Hardware coverage includes accidental damage protection.";
+      }
+
+      setTimeout(() => {
+        playChimeSound();
+
+        // Reset Magic UI Beam status
+        if (beam) beam.classList.remove('beam-pulse-active');
+        if (beamStatus) {
+          beamStatus.innerText = '✓ Grounded Response';
+          beamStatus.className = 'text-[10px] mono text-emerald-400 font-medium';
+        }
+        if (nodeTool) nodeTool.querySelector('div').className = 'w-8 h-8 rounded-full bg-[#0A1324] border border-amber-400/40 flex items-center justify-center text-xs text-amber-400 shadow-md transition-all';
+        if (nodeDb) nodeDb.querySelector('div').className = 'w-8 h-8 rounded-full bg-[#0A1324] border border-indigo-400/40 flex items-center justify-center text-xs text-indigo-300 shadow-md transition-all';
+
+        const botBubble = `
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-xs">
+              <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">
+                <i class="fa-solid fa-comment-dots"></i>
+              </div>
+              <span class="text-xs text-slate-300">TechNova AI Copilot</span>
+            </div>
+            <div class="pl-4 space-y-2">
+              <div>
+                <span class="tool-badge">
+                  <i class="fa-solid fa-bolt text-amber-400 text-[10px]"></i>
+                  Tool: ${tool}
+                </span>
+              </div>
+              <div class="text-xs text-slate-300 leading-relaxed bg-[#080E1C]/90 p-3 rounded-xl border border-slate-800/80">
+                ${reply}
+              </div>
+            </div>
+          </div>
+        `;
+        feed.insertAdjacentHTML('beforeend', botBubble);
+        feed.scrollTop = feed.scrollHeight;
+      }, 500);
+    }
+
+    function openIngestModal() {
+      document.getElementById('ingestModal').classList.remove('hidden');
+      document.getElementById('ingestModal').classList.add('flex');
+    }
+
+    function closeIngestModal() {
+      playClickSound();
+      document.getElementById('ingestModal').classList.add('hidden');
+      document.getElementById('ingestModal').classList.remove('flex');
+    }
+
+    function openArchifyModal() {
+      playClickSound();
+      document.getElementById('archifyModal').classList.remove('hidden');
+      document.getElementById('archifyModal').classList.add('flex');
+    }
+
+    function closeArchifyModal() {
+      playClickSound();
+      document.getElementById('archifyModal').classList.add('hidden');
+      document.getElementById('archifyModal').classList.remove('flex');
+    }
+
+    function processReceiptScan() {
+      playScanSound();
+      setTimeout(() => {
+        closeIngestModal();
+        askCopilot("Receipt uploaded: Processed invoice #INV-2024-8849. Added 30-day return countdown.");
+      }, 500);
+    }
+  </script>
+</body>
+</html>

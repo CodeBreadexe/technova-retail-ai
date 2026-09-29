@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node / Frontend build artifacts
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+*.local
+
+# Environments & Virtual Envs
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Chroma / Vector DB local storage
+chroma_db/
+.chroma/
+
+# Streamlit logs & cache
+.streamlit/secrets.toml
+
+# IDEs, Agent Skills & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+.agents/
+skills-lock.json
+archify_demo/
+

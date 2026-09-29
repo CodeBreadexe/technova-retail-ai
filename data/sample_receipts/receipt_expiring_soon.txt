@@ -1,0 +1,41 @@
+===================================================
+                  TECHNOVA RETAIL
+             STORE #402 - METROPOLIS CENTER
+===================================================
+Receipt Number: REC-84920-A
+Order ID: ORD-1001
+Customer: Alex Mercer
+Date of Purchase: 2026-08-25
+Payment Method: VISA ending in 4102
+
+ITEMS PURCHASED:
+---------------------------------------------------
+1. Item: Sony WH-1000XM5 Wireless Headphones
+   Category: Electronics
+   SKU: EL-99410
+   Quantity: 1
+   Unit Price: $399.99
+   Warranty: 1-Year Store/Manufacturer Limited Warranty
+
+2. Item: Nike Air Zoom Pegasus Running Shoes
+   Category: Apparel
+   SKU: AP-12094
+   Quantity: 1
+   Unit Price: $129.50
+   Warranty: 60-Day Limited Workmanship Warranty
+
+3. Item: Anker USB-C Multiport Hub (Clearance)
+   Category: Clearance
+   SKU: CL-00321
+   Quantity: 1
+   Unit Price: $24.99
+   Warranty: None - Final Sale
+
+---------------------------------------------------
+Subtotal: $554.48
+Tax (8.25%): $45.74
+Total Paid: $600.22
+===================================================
+Keep this receipt for all returns, exchanges, and warranty claims.
+Return windows: Electronics 30 days, Apparel 14 days, Clearance 0 days.
+===================================================

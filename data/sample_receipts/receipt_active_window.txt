@@ -1,0 +1,31 @@
+===================================================
+                  TECHNOVA RETAIL
+             STORE #108 - DOWNTOWN SQUARE
+===================================================
+Receipt Number: REC-99214-B
+Order ID: ORD-1003
+Customer: Alex Mercer
+Date of Purchase: 2026-09-18
+Payment Method: Apple Pay (Mastercard 9912)
+
+ITEMS PURCHASED:
+---------------------------------------------------
+1. Item: Logitech MX Master 3S Performance Mouse
+   Category: Electronics
+   SKU: EL-44912
+   Quantity: 1
+   Unit Price: $99.99
+   Warranty: 1-Year Manufacturer Warranty
+
+2. Item: Levi's 511 Slim Fit Stretch Jeans
+   Category: Apparel
+   SKU: AP-88310
+   Quantity: 2
+   Unit Price: $69.50
+   Warranty: 60-Day Workmanship Warranty
+
+---------------------------------------------------
+Subtotal: $238.99
+Tax (8.25%): $19.72
+Total Paid: $258.71
+===================================================
